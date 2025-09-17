@@ -1,0 +1,31 @@
+---
+// Link de embed para Uruana de Minas, MG - zoom mais próximo (z=16)
+const mapSrc = 'https://maps.google.com/maps?width=100%25&height=400&hl=pt&q=Uruana%20de%20Minas,%20MG&t=&z=15&ie=UTF8&iwloc=&output=embed'
+---
+
+<div class="map-container">
+  <iframe 
+    src={mapSrc}
+    width="100%"
+    height="400"
+    style="border:0;"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    title="Área de cobertura - Uruana de Minas, MG">
+  </iframe>
+</div>
+
+<style>
+.map-container {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 0.5rem;
+}
+
+.map-container iframe {
+  border-radius: 0.5rem;
+}
+</style>

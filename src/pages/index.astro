@@ -1,0 +1,206 @@
+---
+import { getCollection } from 'astro:content'
+import { SITE } from '../config'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import ContactCTA from '../components/ContactCTA.astro'
+import Icon from '../components/Icon.astro'
+import TiaLaraLogo from '../components/TiaLaraLogo.astro'
+import MapEmbed from '../components/MapEmbed.astro'
+
+const [services, testimonials, certifications] = await Promise.all([
+  getCollection('services').then(items => items.sort((a, b) => a.data.order - b.data.order)),
+  getCollection('testimonials').then(items => items.sort((a, b) => a.data.order - b.data.order)),
+  getCollection('certifications').then(items => items.sort((a, b) => a.data.order - b.data.order))
+])
+---
+
+<BaseLayout title={SITE.title} description={SITE.description}>
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="wrapper">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Olá, eu sou a {SITE.name}</h1>
+          <p>Cuidado carinhoso e profissional para crianças em {SITE.location}</p>
+          <div class="hero-pills">
+            <span class="pill">💝 Cuidados</span>
+            <span class="pill">📚 Educação</span>
+            <span class="pill">👨‍👩‍👧‍👦 Família</span>
+          </div>
+        </div>
+        <div class="hero-logo">
+          <div class="logo-circle">
+            <TiaLaraLogo size="8rem" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="py-20 bg-gradient-to-br from-orange-50 to-blue-50 text-center">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-gray-800 mb-8">Sobre Mim</h2>
+      <div class="max-w-4xl mx-auto">
+        <p class="text-lg leading-relaxed mb-6 text-gray-600">Sou apaixonada por cuidar de crianças há mais de 5 anos. Acredito que cada criança é única e merece atenção especial, carinho e cuidado.</p>
+        <p class="text-lg leading-relaxed text-gray-600">Tenho certificações em primeiros socorros, desenvolvimento infantil e nutrição, garantindo o melhor cuidado possível.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="servicos" class="py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Serviços</h2>
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {services.map(service => (
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="bg-gradient-to-r from-pink-500 to-pink-600 p-3 rounded-xl shadow-md group-hover:scale-110 transition-transform duration-300">
+                {service.data.icon && <Icon icon={service.data.icon} size="1.5em" class="text-white" />}
+              </div>
+              <h3 class="text-xl font-bold text-gray-800 group-hover:text-pink-600 transition-colors duration-300">{service.data.title}</h3>
+            </div>
+            <p class="text-gray-600 leading-relaxed text-base">{service.data.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="depoimentos" class="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Depoimentos</h2>
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {testimonials.map(testimonial => (
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group flex flex-col">
+            <div class="flex gap-1 mb-6 text-2xl">
+              {Array.from({length: testimonial.data.rating}).map(() => 
+                <span class="drop-shadow-sm group-hover:scale-110 transition-transform duration-300">⭐</span>
+              )}
+            </div>
+            <div set:html={testimonial.body} class="mb-6 text-gray-600 leading-relaxed text-base flex-1" />
+            <div class="border-t pt-4 mt-auto">
+              <cite class="text-sm text-gray-500 font-semibold">
+                — {testimonial.data.name}
+              </cite>
+              <p class="text-xs text-gray-400 mt-1">{testimonial.data.location}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Certifications -->
+  <section class="py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">Certificações</h2>
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {certifications.map(cert => (
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group text-center">
+            <div class="bg-gradient-to-br from-green-400 to-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <Icon icon="certificate" size="2em" class="text-white" />
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-green-600 transition-colors duration-300">{cert.data.title}</h3>
+            <p class="text-gray-500 text-base mb-2 font-medium">{cert.data.institution}</p>
+            <span class="inline-block bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium">{cert.data.year}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Coverage Area -->
+  <section id="area-cobertura" class="py-20 bg-gradient-to-br from-blue-50 to-pink-50 text-center">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-gray-800 mb-8">Área de Cobertura</h2>
+      <p class="text-lg text-gray-600 mb-12">Atendo toda a cidade de Uruana de Minas e região</p>
+      <div class="max-w-4xl mx-auto">
+        <MapEmbed />
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <ContactCTA />
+</BaseLayout>
+
+<style>
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #ff6b9d, #64b5f6, #66bb6a);
+  color: white;
+  padding: 5rem 0;
+  text-align: center;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+.hero-text h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.hero-text p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.pill {
+  background: rgba(255,255,255,0.2);
+  padding: 0.75rem 1.5rem;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  backdrop-filter: blur(10px);
+}
+
+.logo-circle {
+  width: 16rem;
+  height: 16rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+
+/* Responsive */
+@media (min-width: 768px) {
+  .hero-content {
+    flex-direction: row;
+    text-align: left;
+  }
+  
+  .hero-text {
+    flex: 1;
+  }
+  
+  .hero-text h1 {
+    font-size: 4rem;
+  }
+  
+  .hero-pills {
+    justify-content: flex-start;
+  }
+}
+</style>
